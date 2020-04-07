@@ -15,12 +15,17 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      dog: {
+        type: DataTypes.TEXT,
+        allowNull:true
       }
     },
     {}
   );
   user.associate = function(models) {
-    // associations can be defined here
+    user.hasOne(models.cart)
+    user.hasMany(models.comment)
   };
   return user;
 };
