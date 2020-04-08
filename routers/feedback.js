@@ -8,10 +8,10 @@ const Items = require("../models").cartItem;
 
 const router = new Router();
 
-router.get("/", auth, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const feedback = await Comment.findAll();
-    res.status(200).send({ feedback });
+    res.status(200).send(feedback);
   } catch (e) {
     next(e);
   }
