@@ -35,7 +35,7 @@ router.get("/", auth, async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-})
+});
 
 router.post("/", auth, async (req, res, next) => {
   try {
@@ -46,22 +46,22 @@ router.post("/", auth, async (req, res, next) => {
     if (cart === null) {
       return res.status(400).send({ message: "There is no shoppingcart" });
     }
-    const { quantity, serviceId } = req.body
-    
-    if (quantity <= 0 ) {
+    const { quantity, serviceId } = req.body;
+
+    if (quantity <= 0) {
       return res.status(400).send({ message: "Invalid quantity" });
     }
     if (!serviceId) {
       return res.status(400).send({ message: "Service not found" });
     }
-
     const service = await Items.findOne({
-      where: {serviceId: serviceId}
-    })
-    if (service.cartId === cart.id){
-      await item.update({ quantity });
+      where: { serviceId: serviceId },
+    });
+    if (service && service.cartId === cart.id) {
+      await service.update({ quantity: (service.quantity += 1) });
+      return res.status(201).send({ message: "Item's quantity updated" });
     }
-  
+
     const item = await Items.create({
       quantity,
       serviceId,
@@ -93,9 +93,7 @@ router.delete("/", auth, async (req, res, next) => {
 router.patch("/:itemId", auth, async (req, res) => {
   const item = await Items.findByPk(req.params.itemId);
   if (!req.user) {
-    return res
-      .status(403)
-      .send({ message: "You are not authorized" });
+    return res.status(403).send({ message: "You are not authorized" });
   }
 
   const { quantity } = req.body;
@@ -106,4 +104,3 @@ router.patch("/:itemId", auth, async (req, res) => {
 });
 
 module.exports = router;
-
