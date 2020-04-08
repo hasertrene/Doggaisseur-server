@@ -43,4 +43,23 @@ router.post('/', auth, async (req, res, next) => {
   }
 })
 
+router.delete('/:id', auth, async (req, res, next) => {
+  try{
+    if(req.user.id === null){
+      return res.status(400).send({ message: 'Not logged in!' })
+    }
+    const { id } = req.params
+    
+    const comment = await Comment.findByPk(id)
+    if(!comment){
+      return res.status(404).send({message: 'Comment not found'})
+    }
+    const feedback = await comment.destroy();
+    return res.status(201).send({ message: "Feedback deleted", feedback });
+    
+  } catch(e){
+    next(e)
+  }
+})
+
 module.exports = router;
