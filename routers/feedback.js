@@ -31,12 +31,12 @@ router.post('/', auth, async (req, res, next) => {
       return res.status(400).send({ message: "Service not found" });
     }
   
-    const comment = await Comment.create({
+    const feedback = await Comment.create({
       comment,
       serviceId,
       userId: req.user.id
     });
-    return res.status(201).send({ message: "Feedback added", comment });
+    return res.status(201).send({ message: "Feedback added", feedback });
     
   } catch(e){
     next(e)

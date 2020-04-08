@@ -14,7 +14,7 @@ router.get("/", auth, async (req, res, next) => {
       return res.status(400).send({ message: 'Not logged in!' })
     }
     const cart = await Cart.findOne({ 
-    where: {userId: req.user.id}
+    where: {userId: req.user.id},
     })
     
     if(cart === null){
@@ -22,7 +22,9 @@ router.get("/", auth, async (req, res, next) => {
     }
     
     const items = await Items.findAll({
-    where: {cartId: cart.id}
+    where: {cartId: cart.id},
+    include: [Service],
+    order: [[Items, "createdAt", "DESC"]]
     })
     
     if(items === null){
