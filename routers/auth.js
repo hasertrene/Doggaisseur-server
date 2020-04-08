@@ -3,6 +3,7 @@ const { Router } = require("express");
 const { toJWT } = require("../auth/jwt");
 const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
+const Cart = require('../models').cart
 const { SALT_ROUNDS } = require("../config/constants");
 
 const router = new Router();
@@ -50,8 +51,9 @@ router.post("/signup", async (req, res) => {
     delete newUser.dataValues["password"]; // don't send back the password hash
 
     const token = toJWT({ userId: newUser.id });
-
-    res.status(201).json({ token, ...newUser.dataValues });
+    //Add a shoppincart to the user
+    const cart = await Cart.create({ userId: newUser.id})
+    res.status(201).json({ token, ...newUser.dataValues, cart });
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
       return res
