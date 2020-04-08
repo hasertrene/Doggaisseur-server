@@ -49,11 +49,17 @@ router.post('/', auth, async (req, res, next) => {
     }
     const { quantity, serviceId } = req.body
     
-    if ( quantity <= 0 ) {
+    if (quantity <= 0 ) {
       return res.status(400).send({ message: "Invalid quantity" });
     }
     if (!serviceId){
       return res.status(400).send({ message: "Service not found" });
+    }
+    const service = await Items.findOne({
+      where: {serviceId: serviceId}
+    })
+    if (service.cartId === cart.id){
+      await item.update({ quantity });
     }
   
     const item = await Items.create({

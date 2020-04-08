@@ -23,8 +23,6 @@ router.post("/", auth, async (req, res, next) => {
       return res.status(400).send({ message: "Not logged in!" });
     }
     const { comment, serviceId } = req.body;
-    // console.log("text route", comment);
-    // console.log("radio route", serviceId);
 
     if (!comment) {
       return res.status(400).send({ message: "Invalid comment" });
