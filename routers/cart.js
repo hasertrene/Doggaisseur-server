@@ -36,7 +36,7 @@ router.get("/", auth, async (req, res, next) => {
   } catch(e){
     next(e)
   }
-});
+})
 
 router.post('/', auth, async (req, res, next) => {
   try{
@@ -61,11 +61,25 @@ router.post('/', auth, async (req, res, next) => {
       serviceId,
       cartId: cart.id
     });
-    return res.status(201).send({ message: "Item added to cart", item });
-    
+    return res.status(201).send({ message: "Item added to cart", item })
   } catch(e){
     next(e)
   }
 })
+
+router.patch("/:itemId", auth, async (req, res) => {
+  const item = await Items.findByPk(req.params.itemId);
+  if (!req.user) {
+    return res
+      .status(403)
+      .send({ message: "You are not authorized" });
+  }
+
+  const { quantity } = req.body;
+
+  await item.update({ quantity });
+
+  return res.status(200).send({ item });
+});
 
 module.exports = router;
