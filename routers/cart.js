@@ -24,7 +24,7 @@ router.get("/", auth, async (req, res, next) => {
     const items = await Items.findAll({
     where: {cartId: cart.id},
     include: [Service],
-    order: [[Items, "createdAt", "DESC"]]
+    order: [[Service, "createdAt", "DESC"]]
     })
     
     if(items === null){
