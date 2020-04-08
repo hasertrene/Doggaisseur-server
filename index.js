@@ -159,6 +159,10 @@ app.use("/services", servicesRouter);
 const cartRouter = require("./routers/cart");
 app.use("/cart", cartRouter);
 
+// route for /feedback
+const feedbackRouter = require("./routers/feedback");
+app.use("/feedback", feedbackRouter);
+
 // Listen for connections on specified port (default is port 4000)
 const { PORT } = require("./config/constants");
 

@@ -1,0 +1,46 @@
+const { Router } = require("express");
+const auth = require("../auth/middleware");
+const Service = require("../models").service;
+const Category = require("../models").category;
+const Comment = require('../models').comment
+const Cart = require('../models').cart
+const Items = require('../models').cartItem
+
+const router = new Router();
+
+router.get("/", auth, async (req, res, next) => {
+  try {
+    const feedback = await Comment.findAll()
+  res.status(200).send({feedback})
+  } catch(e){
+    next(e)
+  }
+});
+
+router.post('/', auth, async (req, res, next) => {
+  try{
+    if(req.user.id === null){
+      return res.status(400).send({ message: 'Not logged in!' })
+    }
+    const { comment, serviceId } = req.body
+    
+    if (!comment) {
+      return res.status(400).send({ message: "Invalid comment" });
+    }
+    if (!serviceId){
+      return res.status(400).send({ message: "Service not found" });
+    }
+  
+    const comment = await Comment.create({
+      comment,
+      serviceId,
+      userId: req.user.id
+    });
+    return res.status(201).send({ message: "Feedback added", comment });
+    
+  } catch(e){
+    next(e)
+  }
+})
+
+module.exports = router;
