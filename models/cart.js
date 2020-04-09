@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   cart.associate = function(models) {
     cart.belongsTo(models.user)
-    cart.belongsToMany(models.service, {through: "cartItems", foreignKey: "cartId"})
+    cart.belongsToMany(models.service, {
+      through: "cartItems", 
+      foreignKey: "cartId"
+      })
   };
   return cart;
 };

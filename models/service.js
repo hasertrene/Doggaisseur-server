@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     },
   {});
   service.associate = function(models) {
-  service.belongsToMany(models.cart, {through: "cartItems", foreignKey: "serviceId"})
+  service.belongsToMany(models.cart, {
+    through: "cartItems", 
+    foreignKey: "serviceId"
+    })
   service.hasMany(models.comment)
   service.belongsTo(models.category) 
   };

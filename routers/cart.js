@@ -23,8 +23,9 @@ router.get("/", auth, async (req, res, next) => {
 
     const items = await Items.findAll({
       where: { cartId: cart.id },
-      include: [Service],
-      order: [[Service, "createdAt", "DESC"]],
+      include: [{ model: Service,
+                attributes: ["name", "price", "imageUrl"],
+                order: ["createdAt", "ASC"]}]
     });
 
     if (items === null) {
@@ -92,13 +93,14 @@ router.delete("/", auth, async (req, res, next) => {
 
 router.patch("/:itemId", auth, async (req, res) => {
   const item = await Items.findByPk(req.params.itemId);
+  
   if (!req.user) {
     return res.status(403).send({ message: "You are not authorized" });
   }
-
   const { quantity } = req.body;
 
   await item.update({ quantity });
+
 
   return res.status(200).send({ item });
 });
