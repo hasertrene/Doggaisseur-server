@@ -3,7 +3,7 @@ const { Router } = require("express");
 const { toJWT } = require("../auth/jwt");
 const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
-const Cart = require('../models').cart
+const Cart = require("../models").cart;
 const { SALT_ROUNDS } = require("../config/constants");
 
 const router = new Router();
@@ -22,7 +22,7 @@ router.post("/login", async (req, res, next) => {
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(400).send({
-        message: "User with that email not found or password incorrect"
+        message: "User with that email not found or password incorrect",
       });
     }
 
@@ -36,7 +36,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.post("/signup", async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, dog } = req.body;
   if (!email || !password || !name) {
     return res.status(400).send("Please provide an email, password and a name");
   }
@@ -46,14 +46,14 @@ router.post("/signup", async (req, res) => {
       email,
       password: bcrypt.hashSync(password, SALT_ROUNDS),
       name,
-      dog
+      dog,
     });
 
     delete newUser.dataValues["password"]; // don't send back the password hash
 
     const token = toJWT({ userId: newUser.id });
     //Add a shoppincart to the user
-    const cart = await Cart.create({ userId: newUser.id})
+    const cart = await Cart.create({ userId: newUser.id });
     res.status(201).json({ token, ...newUser.dataValues, cart });
   } catch (error) {
     if (error.name === "SequelizeUniqueConstraintError") {
