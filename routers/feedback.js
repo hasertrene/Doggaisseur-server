@@ -5,12 +5,16 @@ const Category = require("../models").category;
 const Comment = require("../models").comment;
 const Cart = require("../models").cart;
 const Items = require("../models").cartItem;
+const User = require("../models").user
 
 const router = new Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const feedback = await Comment.findAll();
+    const feedback = await Comment.findAll({
+      include: [User],
+      order: [[User, "id", "DESC"]]
+    });
     res.status(200).send(feedback);
   } catch (e) {
     next(e);
